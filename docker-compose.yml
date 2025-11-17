@@ -1,60 +1,59 @@
 services:
   namenode:
-    image: apache/hadoop:3.3.6
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
     container_name: hadoop-namenode
     hostname: namenode
-    command: ["hdfs", "namenode"]
     ports:
       - "9870:9870"  # NameNode Web UI
       - "9000:9000"  # HDFS Port
     environment:
-      ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+      - CLUSTER_NAME=hadoop-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - CORE_CONF_hadoop_http_staticuser_user=root
+      - HDFS_CONF_dfs_replication=3
+      - HDFS_CONF_dfs_permissions_enabled=false
     volumes:
-      - namenode_data:/tmp/hadoop-root/dfs/name
-      - ./config:/opt/hadoop/etc/hadoop:ro
+      - namenode_data:/hadoop/dfs/name
     networks:
       - hadoop_network
 
   datanode1:
-    image: apache/hadoop:3.3.6
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
     container_name: hadoop-datanode1
     hostname: datanode1
-    command: ["hdfs", "datanode"]
     environment:
-      ENSURE_DATANODE_DIR: "/tmp/hadoop-root/dfs/data"
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=3
     volumes:
-      - datanode1_data:/tmp/hadoop-root/dfs/data
-      - ./config:/opt/hadoop/etc/hadoop:ro
+      - datanode1_data:/hadoop/dfs/data
     networks:
       - hadoop_network
     depends_on:
       - namenode
 
   datanode2:
-    image: apache/hadoop:3.3.6
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
     container_name: hadoop-datanode2
     hostname: datanode2
-    command: ["hdfs", "datanode"]
     environment:
-      ENSURE_DATANODE_DIR: "/tmp/hadoop-root/dfs/data"
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=3
     volumes:
-      - datanode2_data:/tmp/hadoop-root/dfs/data
-      - ./config:/opt/hadoop/etc/hadoop:ro
+      - datanode2_data:/hadoop/dfs/data
     networks:
       - hadoop_network
     depends_on:
       - namenode
 
   datanode3:
-    image: apache/hadoop:3.3.6
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
     container_name: hadoop-datanode3
     hostname: datanode3
-    command: ["hdfs", "datanode"]
     environment:
-      ENSURE_DATANODE_DIR: "/tmp/hadoop-root/dfs/data"
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=3
     volumes:
-      - datanode3_data:/tmp/hadoop-root/dfs/data
-      - ./config:/opt/hadoop/etc/hadoop:ro
+      - datanode3_data:/hadoop/dfs/data
     networks:
       - hadoop_network
     depends_on:
